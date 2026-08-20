@@ -1,0 +1,406 @@
+/* =========================================================
+   LEGA — RESET.CSS
+   Prototype 1
+
+   SECTION 1: DESKTOP / BASE RESET
+   SECTION 2: MOBILE RESET
+
+   Most responsive layout behaviour will be handled later
+   inside style.css.
+========================================================= */
+
+/* =========================================================
+   1. DESKTOP / BASE RESET
+   ---------------------------------------------------------
+   Default foundation for Lega.
+
+   This section also provides the base behaviour shared
+   across different screen sizes.
+========================================================= */
+
+/* ---------- Box sizing ---------- */
+
+html {
+  box-sizing: border-box;
+
+  /* Prevent browsers from automatically enlarging text */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+
+  /* Smooth navigation when using anchors */
+  scroll-behavior: smooth;
+
+  /* Prevent horizontal page overflow */
+  overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+/* ---------- Document ---------- */
+
+html,
+body {
+  width: 100%;
+  min-width: 0;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  overflow-x: hidden;
+
+  line-height: 1.5;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------- Default spacing ---------- */
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd,
+ul,
+ol,
+fieldset,
+legend {
+  margin: 0;
+  padding: 0;
+}
+
+/* ---------- Headings ---------- */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+
+/* ---------- Paragraphs ---------- */
+
+p {
+  overflow-wrap: break-word;
+}
+
+/* ---------- Lists ---------- */
+
+ul,
+ol {
+  list-style: none;
+}
+
+/* ---------- Links ---------- */
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ---------- Buttons and forms ---------- */
+
+button,
+input,
+textarea,
+select {
+  margin: 0;
+
+  font: inherit;
+  color: inherit;
+
+  border: 0;
+  border-radius: 0;
+
+  background: none;
+}
+
+button {
+  padding: 0;
+
+  cursor: pointer;
+
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+textarea {
+  resize: vertical;
+}
+
+fieldset {
+  min-width: 0;
+  border: 0;
+}
+
+legend {
+  width: 100%;
+}
+
+/* ---------- Range inputs ---------- */
+
+input[type="range"] {
+  appearance: none;
+  -webkit-appearance: none;
+
+  width: 100%;
+  background: transparent;
+}
+
+/* ---------- Checkboxes and radios ---------- */
+
+input[type="checkbox"],
+input[type="radio"] {
+  width: auto;
+  flex-shrink: 0;
+
+  appearance: auto;
+  -webkit-appearance: auto;
+}
+
+/* ---------- Date and time inputs ---------- */
+
+input[type="date"],
+input[type="time"] {
+  min-width: 0;
+}
+
+/* ---------- Images and media ---------- */
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+
+  max-width: 100%;
+  height: auto;
+}
+
+/* ---------- SVG ---------- */
+
+svg {
+  overflow: visible;
+}
+
+/* ---------- Tables ---------- */
+
+table {
+  width: 100%;
+
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+/* ---------- Hidden elements ---------- */
+
+[hidden] {
+  display: none !important;
+}
+
+/* ---------- Interactive elements ---------- */
+
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------- Keyboard accessibility ---------- */
+
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+/* ---------- Selection ---------- */
+
+::selection {
+  color: inherit;
+}
+
+/* ---------- Prevent oversized content ---------- */
+
+main,
+section,
+article,
+aside,
+header,
+footer,
+nav,
+div {
+  min-width: 0;
+}
+
+/* ---------- Desktop viewport ---------- */
+
+@media screen and (min-width: 769px) {
+  html,
+  body {
+    width: 100%;
+    min-height: 100%;
+  }
+
+  body {
+    min-width: 320px;
+  }
+}
+
+/* =========================================================
+   2. MOBILE RESET
+   ---------------------------------------------------------
+   Mobile-specific browser behaviour.
+
+   The visual mobile redesign will come later. These rules
+   simply make sure Prototype 1 remains usable on phones.
+========================================================= */
+
+@media screen and (max-width: 768px) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* ---------- Mobile document ---------- */
+
+  html,
+  body {
+    width: 100%;
+
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  body {
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    overflow-x: hidden;
+
+    /* Helps prevent accidental sideways overscroll */
+    overscroll-behavior-x: none;
+  }
+
+  /* ---------- Touch targets ---------- */
+
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    touch-action: manipulation;
+  }
+
+  /* ---------- Prevent iOS form zoom ---------- */
+
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+
+  /* ---------- Mobile text wrapping ---------- */
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span,
+  label {
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  /* ---------- Mobile media ---------- */
+
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    max-width: 100%;
+  }
+
+  /* ---------- Mobile form safety ---------- */
+
+  input,
+  textarea,
+  select,
+  button {
+    max-width: 100%;
+  }
+}
+
+/* =========================================================
+   ACCESSIBILITY — REDUCED MOTION
+   ---------------------------------------------------------
+   Applies regardless of screen size.
+
+   Important later for:
+   - Lega loading animation
+   - radial clock motion
+   - modal transitions
+   - mood-ring animation
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+}

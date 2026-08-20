@@ -1,0 +1,2822 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta
+      name="description"
+      content="Lega is a private emotional reflection space designed to help you notice and understand what you're experiencing without needing to name it first."
+    />
+
+    <title>Lega</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="reset.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <!-- =====================================================
+         LEGA LOADING / STANDBY SCREEN
+    ====================================================== -->
+
+    <div class="loading-screen" id="loadingScreen" aria-hidden="false">
+      <div class="loading-screen__content">
+        <div class="loading-mark" aria-hidden="true">
+          <span class="loading-mark__ring"></span>
+          <span class="loading-mark__dot"></span>
+        </div>
+
+        <h1 class="loading-screen__logo">Lega</h1>
+
+        <p class="loading-screen__message">
+          A little space for whatever is on your mind.
+        </p>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         FIRST-TIME ONBOARDING
+    ====================================================== -->
+
+    <div
+      class="modal onboarding-modal"
+      id="onboardingModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="onboardingTitle"
+      hidden
+    >
+      <div class="modal__backdrop"></div>
+
+      <div class="modal__panel onboarding-modal__panel">
+        <!-- STEP 1 -->
+
+        <section
+          class="onboarding-step onboarding-step--active"
+          id="onboardingWelcome"
+          data-onboarding-step="1"
+        >
+          <span class="onboarding-step__eyebrow"> Welcome </span>
+
+          <h2 id="onboardingTitle">Welcome to Lega</h2>
+
+          <p>
+            Lega is a private space for noticing what is going on within you
+            without needing to find the perfect emotion, label, or explanation
+            first.
+          </p>
+
+          <p>
+            Record as much or as little as you want, revisit moments from your
+            day, and gradually build a picture of your experiences over time.
+          </p>
+
+          <div class="modal__actions">
+            <button
+              class="button button--primary"
+              id="continueToWarningButton"
+              type="button"
+            >
+              Continue
+            </button>
+          </div>
+        </section>
+
+        <!-- STEP 2 -->
+
+        <section
+          class="onboarding-step"
+          id="onboardingWarning"
+          data-onboarding-step="2"
+          aria-labelledby="warningTitle"
+          hidden
+        >
+          <span class="onboarding-step__eyebrow"> Before you continue </span>
+
+          <h2 id="warningTitle">A quick note about Lega</h2>
+
+          <div class="warning-card">
+            <p>
+              Lega is designed for personal reflection and self-understanding.
+            </p>
+
+            <ul>
+              <li>Lega does not diagnose mental health conditions.</li>
+
+              <li>
+                Entries, patterns, colours, icons, sliders, and statistics
+                should not be interpreted as medical or psychological
+                assessments.
+              </li>
+
+              <li>
+                Lega is not therapy and is not a replacement for professional
+                healthcare or mental health support.
+              </li>
+
+              <li>
+                The meaning of your experiences remains yours. Lega helps you
+                reflect; it does not decide what you are feeling for you.
+              </li>
+            </ul>
+          </div>
+
+          <label class="acknowledgement">
+            <input type="checkbox" id="onboardingAcknowledgement" />
+
+            <span>
+              I understand what Lega is designed for and its limitations.
+            </span>
+          </label>
+
+          <div class="modal__actions modal__actions--split">
+            <button
+              class="button button--secondary"
+              id="backToWelcomeButton"
+              type="button"
+            >
+              Back
+            </button>
+
+            <button
+              class="button button--primary"
+              id="enterLegaButton"
+              type="button"
+              disabled
+            >
+              Enter Lega
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         MAIN LEGA APPLICATION
+    ====================================================== -->
+
+    <div class="app" id="legaApp">
+      <!-- =================================================
+             HEADER
+        ================================================== -->
+
+      <header class="app-header">
+        <div class="app-header__left">
+          <button
+            class="icon-button"
+            id="helpButton"
+            type="button"
+            aria-label="About Lega"
+            title="About Lega"
+          >
+            <span aria-hidden="true"> ? </span>
+          </button>
+        </div>
+
+        <a
+          class="app-header__brand"
+          href="#home"
+          data-page-target="homePage"
+          aria-label="Lega home"
+        >
+          Lega
+        </a>
+
+        <div class="app-header__right">
+          <button
+            class="icon-button"
+            id="settingsButton"
+            type="button"
+            aria-label="Open settings"
+            title="Settings"
+          >
+            <span aria-hidden="true"> ⚙ </span>
+          </button>
+        </div>
+      </header>
+
+      <!-- =================================================
+             MAIN CONTENT
+        ================================================== -->
+
+      <main class="app-main">
+        <!-- =============================================
+                 HOME PAGE
+            ============================================== -->
+
+        <section
+          class="app-page app-page--active home-page"
+          id="homePage"
+          data-page="home"
+        >
+          <div class="home-layout">
+            <!-- =====================================
+                         LEFT COLUMN
+                    ====================================== -->
+
+            <div class="home-left">
+              <!-- TODAY -->
+
+              <aside class="today-panel" aria-labelledby="todayEntriesTitle">
+                <div class="section-heading">
+                  <div>
+                    <span class="section-heading__eyebrow"> Your day </span>
+
+                    <h2 id="todayEntriesTitle">Today</h2>
+                  </div>
+
+                  <span class="entry-count" id="todayEntryCount">
+                    0 entries
+                  </span>
+                </div>
+
+                <div class="entry-list" id="todayEntryList" aria-live="polite">
+                  <div class="empty-state" id="todayEmptyState">
+                    <span class="empty-state__icon" aria-hidden="true">
+                      ◌
+                    </span>
+
+                    <p>Nothing here yet.</p>
+
+                    <span>
+                      Your moments will appear here as you add them.
+                    </span>
+                  </div>
+                </div>
+              </aside>
+
+              <!-- QUICK ENTRY -->
+
+              <section class="quick-entry" aria-labelledby="quickEntryPrompt">
+                <div class="quick-entry__text">
+                  <span class="quick-entry__eyebrow">
+                    Whenever you're ready
+                  </span>
+
+                  <p class="quick-entry__prompt" id="quickEntryPrompt">
+                    What's on your mind?
+                  </p>
+
+                  <span class="quick-entry__supporting-text">
+                    Add as much or as little as you'd like.
+                  </span>
+                </div>
+
+                <button
+                  class="add-entry-button"
+                  id="addEntryButton"
+                  type="button"
+                  aria-label="Add a new entry"
+                >
+                  <span aria-hidden="true"> + </span>
+                </button>
+              </section>
+            </div>
+
+            <!-- =====================================
+                         CENTRAL RADIAL CLOCK
+                    ====================================== -->
+
+            <section class="clock-section" aria-labelledby="currentDate">
+              <div class="radial-clock" id="radialClock">
+                <!-- MOOD TIMELINE -->
+
+                <div
+                  class="mood-ring"
+                  id="moodRing"
+                  aria-label="Your emotional timeline for today"
+                >
+                  <div class="mood-ring__placeholder" aria-hidden="true"></div>
+                </div>
+
+                <!-- ENTRY MARKERS -->
+
+                <div
+                  class="mood-markers"
+                  id="moodMarkers"
+                  aria-hidden="true"
+                ></div>
+
+                <!-- 24-HOUR CLOCK FACE -->
+
+                <div class="clock-face" id="clockFace" aria-hidden="true">
+                  <span class="hour-label hour-label--major" data-hour="0"
+                    >00</span
+                  >
+                  <span class="hour-label" data-hour="1">01</span>
+                  <span class="hour-label" data-hour="2">02</span>
+                  <span class="hour-label hour-label--major" data-hour="3"
+                    >03</span
+                  >
+                  <span class="hour-label" data-hour="4">04</span>
+                  <span class="hour-label" data-hour="5">05</span>
+                  <span class="hour-label hour-label--major" data-hour="6"
+                    >06</span
+                  >
+                  <span class="hour-label" data-hour="7">07</span>
+                  <span class="hour-label" data-hour="8">08</span>
+                  <span class="hour-label hour-label--major" data-hour="9"
+                    >09</span
+                  >
+                  <span class="hour-label" data-hour="10">10</span>
+                  <span class="hour-label" data-hour="11">11</span>
+                  <span class="hour-label hour-label--major" data-hour="12"
+                    >12</span
+                  >
+                  <span class="hour-label" data-hour="13">13</span>
+                  <span class="hour-label" data-hour="14">14</span>
+                  <span class="hour-label hour-label--major" data-hour="15"
+                    >15</span
+                  >
+                  <span class="hour-label" data-hour="16">16</span>
+                  <span class="hour-label" data-hour="17">17</span>
+                  <span class="hour-label hour-label--major" data-hour="18"
+                    >18</span
+                  >
+                  <span class="hour-label" data-hour="19">19</span>
+                  <span class="hour-label" data-hour="20">20</span>
+                  <span class="hour-label hour-label--major" data-hour="21"
+                    >21</span
+                  >
+                  <span class="hour-label" data-hour="22">22</span>
+                  <span class="hour-label" data-hour="23">23</span>
+                </div>
+
+                <!-- HOUR HAND -->
+
+                <div
+                  class="clock-hand clock-hand--hour"
+                  id="clockHand"
+                  aria-hidden="true"
+                >
+                  <span class="clock-hand__line clock-hand__line--hour"></span>
+                </div>
+
+                <!-- MINUTE HAND -->
+
+                <div
+                  class="clock-hand clock-hand--minute"
+                  id="minuteHand"
+                  aria-hidden="true"
+                >
+                  <span
+                    class="clock-hand__line clock-hand__line--minute"
+                  ></span>
+                </div>
+
+                <!-- SECOND HAND -->
+
+                <div
+                  class="clock-hand clock-hand--second"
+                  id="secondHand"
+                  aria-hidden="true"
+                >
+                  <span
+                    class="clock-hand__line clock-hand__line--second"
+                  ></span>
+                </div>
+
+                <!-- CENTRE PIN -->
+
+                <span class="clock-hand__centre" aria-hidden="true"></span>
+
+                <!-- CENTRE INFORMATION -->
+
+                <div class="clock-centre">
+                  <button
+                    class="date-display"
+                    id="dateDisplayButton"
+                    type="button"
+                    aria-label="Choose another day"
+                  >
+                    <span class="date-display__weekday" id="currentWeekday">
+                      Tuesday
+                    </span>
+
+                    <span class="date-display__date" id="currentDate">
+                      18 August 2026
+                    </span>
+                  </button>
+
+                  <time class="digital-clock" id="digitalClock" datetime="">
+                    <span class="digital-clock__time" id="digitalClockTime">
+                      09:11
+                    </span>
+
+                    <span class="digital-clock__period" id="digitalClockPeriod">
+                      PM
+                    </span>
+                  </time>
+                </div>
+              </div>
+            </section>
+
+            <!-- =====================================
+                         RIGHT COLUMN
+                    ====================================== -->
+
+            <aside class="day-summary" aria-labelledby="daySummaryTitle">
+              <div class="section-heading">
+                <div>
+                  <span class="section-heading__eyebrow"> At a glance </span>
+
+                  <h2 id="daySummaryTitle">Your day</h2>
+                </div>
+              </div>
+
+              <div class="summary-card">
+                <span class="summary-card__label"> Moments recorded </span>
+
+                <strong id="totalEntriesToday"> 0 </strong>
+              </div>
+
+              <div class="summary-card">
+                <span class="summary-card__label">
+                  Reflection dimensions used
+                </span>
+
+                <strong id="dimensionsUsedToday"> 0 </strong>
+              </div>
+
+              <div class="summary-card">
+                <span class="summary-card__label"> Timeline recorded </span>
+
+                <strong id="timelineRecordedToday"> — </strong>
+              </div>
+
+              <!-- TEMPORARY LEGACY ELEMENTS -->
+
+              <span id="firstEntryTime" hidden> — </span>
+
+              <span id="latestEntryTime" hidden> — </span>
+            </aside>
+          </div>
+        </section>
+
+        <!-- =============================================
+                 INSIGHTS
+            ============================================== -->
+
+        <section
+          class="app-page insights-page"
+          id="insightsPage"
+          data-page="insights"
+          hidden
+        >
+          <header class="page-heading">
+            <span class="page-heading__eyebrow"> Looking back </span>
+
+            <h1>Your patterns</h1>
+
+            <p>
+              A gentle overview of what you've recorded. These patterns are for
+              reflection, not diagnosis.
+            </p>
+          </header>
+
+          <div
+            class="range-selector"
+            role="group"
+            aria-label="Choose insight range"
+          >
+            <button
+              class="range-selector__button range-selector__button--active"
+              type="button"
+              data-range="week"
+            >
+              Week
+            </button>
+
+            <button
+              class="range-selector__button"
+              type="button"
+              data-range="month"
+            >
+              Month
+            </button>
+          </div>
+
+          <div class="insights-grid">
+            <article class="insight-card insight-card--large">
+              <div class="insight-card__heading">
+                <span class="insight-card__eyebrow"> This week </span>
+
+                <h2>Your week at a glance</h2>
+              </div>
+
+              <div class="weekly-overview-placeholder" id="weeklyOverview">
+                <span> Weekly visualisation will appear here. </span>
+              </div>
+            </article>
+
+            <article class="insight-card">
+              <span class="insight-card__eyebrow"> Entries </span>
+
+              <h2>Moments recorded</h2>
+
+              <strong class="insight-stat" id="weeklyEntryCount"> 0 </strong>
+
+              <p>moments this week</p>
+            </article>
+
+            <article class="insight-card">
+              <span class="insight-card__eyebrow"> Timing </span>
+
+              <h2>When you tend to reflect</h2>
+
+              <div class="insight-placeholder" id="timePatternChart">
+                Not enough entries yet.
+              </div>
+            </article>
+
+            <article class="insight-card insight-card--wide">
+              <span class="insight-card__eyebrow"> Reflection dimensions </span>
+
+              <h2>What you've been noticing</h2>
+
+              <p>
+                This area can later show patterns across whichever reflection
+                dimensions you choose to use.
+              </p>
+
+              <div class="dimension-summary" id="dimensionSummary"></div>
+            </article>
+
+            <article class="insight-card insight-card--reflection">
+              <span class="insight-card__eyebrow"> Remember </span>
+
+              <h2>Patterns aren't labels.</h2>
+
+              <p>
+                Changes in your entries may help you notice something worth
+                reflecting on, but they do not define you or indicate a
+                diagnosis.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <!-- =============================================
+                 HISTORY
+            ============================================== -->
+
+        <section
+          class="app-page history-page"
+          id="historyPage"
+          data-page="history"
+          hidden
+        >
+          <header class="page-heading">
+            <span class="page-heading__eyebrow"> Previous days </span>
+
+            <h1>Your history</h1>
+
+            <p>Revisit moments you've recorded over time.</p>
+          </header>
+
+          <div class="history-list" id="historyList">
+            <div class="empty-state">
+              <span class="empty-state__icon" aria-hidden="true"> ◌ </span>
+
+              <p>Your previous days will appear here.</p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- =================================================
+             BOTTOM NAVIGATION
+        ================================================== -->
+
+      <nav class="bottom-navigation" aria-label="Main navigation">
+        <button
+          class="nav-item nav-item--active"
+          type="button"
+          data-page-target="homePage"
+          aria-current="page"
+        >
+          <span class="nav-item__icon" aria-hidden="true"> ◯ </span>
+
+          <span class="nav-item__label"> Today </span>
+        </button>
+
+        <button class="nav-item" type="button" data-page-target="historyPage">
+          <span class="nav-item__icon" aria-hidden="true"> ◷ </span>
+
+          <span class="nav-item__label"> History </span>
+        </button>
+
+        <button class="nav-item" type="button" data-page-target="insightsPage">
+          <span class="nav-item__icon" aria-hidden="true"> ◫ </span>
+
+          <span class="nav-item__label"> Insights </span>
+        </button>
+
+        <button class="nav-item" id="navigationSettingsButton" type="button">
+          <span class="nav-item__icon" aria-hidden="true"> ⚙ </span>
+
+          <span class="nav-item__label"> Settings </span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- =====================================================
+         ENTRY START MENU
+         -----------------------------------------------------
+         NEW FLOW:
+
+         +
+         ↓
+         How would you like to start?
+    ====================================================== -->
+
+    <div
+      class="modal entry-start-modal"
+      id="entryStartModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="entryStartTitle"
+      hidden
+    >
+      <div class="modal__backdrop" data-close-entry-start></div>
+
+      <div class="modal__panel entry-start-modal__panel">
+        <header class="modal__header">
+          <div>
+            <span class="modal__eyebrow"> A moment for you </span>
+
+            <h2 id="entryStartTitle">How would you like to start?</h2>
+
+            <p>
+              Use a starting point or begin with a completely blank entry. You
+              can change anything afterwards.
+            </p>
+          </div>
+
+          <button
+            class="icon-button"
+            id="closeEntryStartButton"
+            type="button"
+            aria-label="Close"
+          >
+            ×
+          </button>
+        </header>
+
+        <div class="entry-start-options">
+          <!-- LEGA TEMPLATE -->
+
+          <button
+            class="entry-start-card"
+            id="chooseLegaTemplateButton"
+            type="button"
+          >
+            <span class="entry-start-card__icon" aria-hidden="true"> ✦ </span>
+
+            <span class="entry-start-card__content">
+              <strong> Use a Lega template </strong>
+
+              <span>
+                Start with a ready-made collection of reflection sliders.
+              </span>
+            </span>
+
+            <span class="entry-start-card__arrow" aria-hidden="true"> → </span>
+          </button>
+
+          <!-- PERSONAL TEMPLATE -->
+
+          <button
+            class="entry-start-card"
+            id="choosePersonalTemplateButton"
+            type="button"
+          >
+            <span class="entry-start-card__icon" aria-hidden="true"> ♡ </span>
+
+            <span class="entry-start-card__content">
+              <strong> Use one of my templates </strong>
+
+              <span>
+                Reuse a combination of sliders you've saved for yourself.
+              </span>
+            </span>
+
+            <span class="entry-start-card__arrow" aria-hidden="true"> → </span>
+          </button>
+
+          <!-- BLANK -->
+
+          <button
+            class="entry-start-card entry-start-card--blank"
+            id="startBlankEntryButton"
+            type="button"
+          >
+            <span class="entry-start-card__icon" aria-hidden="true"> + </span>
+
+            <span class="entry-start-card__content">
+              <strong> Start blank </strong>
+
+              <span>
+                Begin with the basics and add only what feels useful.
+              </span>
+            </span>
+
+            <span class="entry-start-card__arrow" aria-hidden="true"> → </span>
+          </button>
+        </div>
+
+        <p class="entry-start-note">
+          Templates only choose what appears in your entry. They never decide
+          your slider values for you.
+        </p>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         LEGA TEMPLATE LIBRARY
+    ====================================================== -->
+
+    <div
+      class="modal template-library-modal"
+      id="templateLibraryModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="templateLibraryTitle"
+      hidden
+    >
+      <div class="modal__backdrop" data-close-template-library></div>
+
+      <div class="modal__panel template-library-modal__panel">
+        <header class="modal__header">
+          <div>
+            <span class="modal__eyebrow"> Lega templates </span>
+
+            <h2 id="templateLibraryTitle">Choose a starting point</h2>
+
+            <p>
+              These templates simply suggest things you may want to notice.
+              Remove or add anything you like.
+            </p>
+          </div>
+
+          <button
+            class="icon-button"
+            id="closeTemplateLibraryButton"
+            type="button"
+            aria-label="Close templates"
+          >
+            ×
+          </button>
+        </header>
+
+        <div class="template-grid" id="legaTemplateGrid">
+          <!-- GENERAL -->
+
+          <button
+            class="template-card"
+            type="button"
+            data-template-id="general"
+          >
+            <span class="template-card__icon" aria-hidden="true"> ◌ </span>
+
+            <strong> General reflection </strong>
+
+            <span>
+              A simple mix for checking in with your overall experience.
+            </span>
+
+            <small> Intensity · Energy · Tension · Mental load </small>
+          </button>
+
+          <!-- BUSY DAY -->
+
+          <button
+            class="template-card"
+            type="button"
+            data-template-id="busy-day"
+          >
+            <span class="template-card__icon" aria-hidden="true"> ⚡ </span>
+
+            <strong> Busy day </strong>
+
+            <span>
+              Useful after a packed, demanding, or fast-moving period.
+            </span>
+
+            <small> Overwhelm · Mental load · Energy · Tension </small>
+          </button>
+
+          <!-- STUDY / WORK -->
+
+          <button
+            class="template-card"
+            type="button"
+            data-template-id="study-work"
+          >
+            <span class="template-card__icon" aria-hidden="true"> ✎ </span>
+
+            <strong> Study or work </strong>
+
+            <span>
+              Notice concentration, effort, and your available energy.
+            </span>
+
+            <small> Focus · Mental clarity · Motivation · Effort </small>
+          </button>
+
+          <!-- SOCIAL -->
+
+          <button class="template-card" type="button" data-template-id="social">
+            <span class="template-card__icon" aria-hidden="true"> ☺ </span>
+
+            <strong> Social moment </strong>
+
+            <span>
+              Reflect on what being around other people felt like for you.
+            </span>
+
+            <small>
+              Social energy · Connectedness · Comfort · Need for space
+            </small>
+          </button>
+
+          <!-- BEFORE SLEEP -->
+
+          <button
+            class="template-card"
+            type="button"
+            data-template-id="before-sleep"
+          >
+            <span class="template-card__icon" aria-hidden="true"> ☾ </span>
+
+            <strong> Before sleep </strong>
+
+            <span>
+              A softer way to notice how you're winding down at the end of the
+              day.
+            </span>
+
+            <small> Sleepiness · Restlessness · Tension · Thought speed </small>
+          </button>
+
+          <!-- AFTER ACTIVITY -->
+
+          <button
+            class="template-card"
+            type="button"
+            data-template-id="after-activity"
+          >
+            <span class="template-card__icon" aria-hidden="true"> ◒ </span>
+
+            <strong> After an activity </strong>
+
+            <span>
+              Notice how your body and energy feel after doing something.
+            </span>
+
+            <small> Physical energy · Tiredness · Comfort · Intensity </small>
+          </button>
+        </div>
+
+        <div class="modal__actions modal__actions--split">
+          <button
+            class="button button--secondary"
+            id="backFromTemplateLibraryButton"
+            type="button"
+          >
+            Back
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         MY TEMPLATES
+    ====================================================== -->
+
+    <div
+      class="modal personal-templates-modal"
+      id="personalTemplatesModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="personalTemplatesTitle"
+      hidden
+    >
+      <div class="modal__backdrop" data-close-personal-templates></div>
+
+      <div class="modal__panel">
+        <header class="modal__header">
+          <div>
+            <span class="modal__eyebrow"> Your templates </span>
+
+            <h2 id="personalTemplatesTitle">My templates</h2>
+
+            <p>
+              Save combinations you like and return to them whenever you want.
+            </p>
+          </div>
+
+          <button
+            class="icon-button"
+            id="closePersonalTemplatesButton"
+            type="button"
+            aria-label="Close templates"
+          >
+            ×
+          </button>
+        </header>
+
+        <div class="personal-template-list" id="personalTemplateList">
+          <div class="empty-state" id="personalTemplateEmptyState">
+            <span class="empty-state__icon" aria-hidden="true"> ♡ </span>
+
+            <p>No templates yet.</p>
+
+            <span>
+              Create one using the sliders that are most useful to you.
+            </span>
+          </div>
+        </div>
+
+        <div class="modal__actions modal__actions--split">
+          <button
+            class="button button--secondary"
+            id="backFromPersonalTemplatesButton"
+            type="button"
+          >
+            Back
+          </button>
+
+          <button
+            class="button button--primary"
+            id="createTemplateButton"
+            type="button"
+          >
+            Create a template
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         CUSTOM TEMPLATE BUILDER
+    ====================================================== -->
+
+    <div
+      class="modal template-builder-modal"
+      id="templateBuilderModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="templateBuilderTitle"
+      hidden
+    >
+      <div class="modal__backdrop" data-close-template-builder></div>
+
+      <div class="modal__panel template-builder-modal__panel">
+        <header class="modal__header">
+          <div>
+            <span class="modal__eyebrow"> Make it yours </span>
+
+            <h2 id="templateBuilderTitle">Create a template</h2>
+
+            <p>
+              Pick the things you often find useful to notice. You can change
+              this template later.
+            </p>
+          </div>
+
+          <button
+            class="icon-button"
+            id="closeTemplateBuilderButton"
+            type="button"
+            aria-label="Close template builder"
+          >
+            ×
+          </button>
+        </header>
+
+        <form class="template-builder-form" id="templateBuilderForm">
+          <div class="form-group">
+            <label for="templateName"> Template name </label>
+
+            <input
+              id="templateName"
+              name="templateName"
+              type="text"
+              maxlength="50"
+              placeholder="After work, Before bed, Uni..."
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="templateDescription">
+              Short note
+              <span class="optional-label"> optional </span>
+            </label>
+
+            <input
+              id="templateDescription"
+              name="templateDescription"
+              type="text"
+              maxlength="120"
+              placeholder="What do you usually use this for?"
+            />
+          </div>
+
+          <section class="template-builder-sliders">
+            <div class="template-builder-sliders__heading">
+              <div>
+                <span class="modal__eyebrow"> Reflection sliders </span>
+
+                <h3>What's useful in this template?</h3>
+              </div>
+
+              <button
+                class="button button--secondary"
+                id="chooseTemplateSlidersButton"
+                type="button"
+              >
+                Choose sliders
+              </button>
+            </div>
+
+            <div class="selected-slider-list" id="templateSelectedSliders">
+              <div class="selected-slider-empty">No sliders chosen yet.</div>
+            </div>
+          </section>
+
+          <div class="entry-form__actions">
+            <button
+              class="button button--secondary"
+              id="cancelTemplateBuilderButton"
+              type="button"
+            >
+              Cancel
+            </button>
+
+            <button class="button button--primary" type="submit">
+              Save template
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         ENTRY EDITOR
+         -----------------------------------------------------
+         Used after:
+         - Blank entry
+         - Lega template
+         - Personal template
+    ====================================================== -->
+
+    <div
+      class="modal entry-modal"
+      id="entryModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="entryModalTitle"
+      hidden
+    >
+      <div class="modal__backdrop" data-close-entry-modal></div>
+
+      <div class="modal__panel entry-modal__panel">
+        <header class="modal__header">
+          <div>
+            <span class="modal__eyebrow"> A moment for you </span>
+
+            <h2 id="entryModalTitle">What's going on right now?</h2>
+
+            <p
+              class="entry-template-indicator"
+              id="entryTemplateIndicator"
+              hidden
+            >
+              Using template:
+              <strong id="entryTemplateName"></strong>
+            </p>
+          </div>
+
+          <button
+            class="icon-button"
+            id="closeEntryModalButton"
+            type="button"
+            aria-label="Close entry"
+          >
+            ×
+          </button>
+        </header>
+
+        <form class="entry-form" id="entryForm">
+          <!-- =========================================
+                     OPTIONAL TITLE
+                ========================================== -->
+
+          <div class="form-group">
+            <label for="entryTitle">
+              Give this moment a title
+
+              <span class="optional-label"> optional </span>
+            </label>
+
+            <input
+              id="entryTitle"
+              name="entryTitle"
+              type="text"
+              maxlength="80"
+              placeholder="A quiet afternoon, long day at work..."
+            />
+          </div>
+
+          <!-- =========================================
+                     TIME
+                ========================================== -->
+
+          <fieldset class="form-group">
+            <legend>When was this?</legend>
+
+            <label class="radio-option">
+              <input type="radio" name="entryTimeMode" value="now" checked />
+
+              <span> Right now </span>
+            </label>
+
+            <label class="radio-option">
+              <input type="radio" name="entryTimeMode" value="custom" />
+
+              <span> Choose a time </span>
+            </label>
+
+            <div class="custom-time-fields" id="customTimeFields" hidden>
+              <label for="entryDate"> Date </label>
+
+              <input id="entryDate" name="entryDate" type="date" />
+
+              <label for="entryTime"> Time </label>
+
+              <input id="entryTime" name="entryTime" type="time" />
+            </div>
+          </fieldset>
+
+          <!-- =========================================
+                     VISUAL
+                ========================================== -->
+
+          <fieldset class="form-group entry-visual-builder">
+            <legend>
+              Pick something that fits this moment
+              <span class="optional-label"> optional </span>
+            </legend>
+
+            <p class="form-helper">
+              Choose any colour and any emoji you like. Lega does not assign
+              meanings to them.
+            </p>
+
+            <div class="entry-visual-options">
+              <!-- EMOJI -->
+
+              <div class="entry-visual-choice">
+                <span class="entry-visual-choice__label"> Emoji or icon </span>
+
+                <button
+                  class="visual-picker-button"
+                  id="openEmojiPickerButton"
+                  type="button"
+                >
+                  <span
+                    class="visual-picker-button__preview"
+                    id="selectedEmojiPreview"
+                    aria-hidden="true"
+                  >
+                    +
+                  </span>
+
+                  <span> Choose an emoji </span>
+                </button>
+
+                <input
+                  type="hidden"
+                  id="selectedEmoji"
+                  name="selectedEmoji"
+                  value=""
+                />
+              </div>
+
+              <!-- COLOUR -->
+
+              <div class="entry-visual-choice">
+                <label
+                  class="entry-visual-choice__label"
+                  for="customColourPicker"
+                >
+                  Colour
+                </label>
+
+                <div class="custom-colour-control">
+                  <input
+                    id="customColourPicker"
+                    name="customColourPicker"
+                    type="color"
+                    value="#abcba9"
+                  />
+
+                  <span
+                    class="custom-colour-preview"
+                    id="customColourPreview"
+                    aria-hidden="true"
+                  ></span>
+
+                  <span> Choose any colour </span>
+                </div>
+
+                <input
+                  type="hidden"
+                  id="selectedColour"
+                  name="selectedColour"
+                  value="#abcba9"
+                />
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- =========================================
+                     REFLECTION SLIDERS
+                ========================================== -->
+
+          <fieldset class="form-group reflection-dimensions">
+            <legend>
+              Anything you'd like to notice?
+              <span class="optional-label"> optional </span>
+            </legend>
+
+            <p class="form-helper">
+              Choose one slider, several, or none at all.
+            </p>
+
+            <button
+              class="choose-sliders-button"
+              id="chooseEntrySlidersButton"
+              type="button"
+            >
+              <span class="choose-sliders-button__icon" aria-hidden="true">
+                ☰
+              </span>
+
+              <span>
+                <strong> Choose your sliders </strong>
+
+                <small id="selectedSliderCount"> No sliders selected </small>
+              </span>
+
+              <span class="choose-sliders-button__arrow" aria-hidden="true">
+                →
+              </span>
+            </button>
+
+            <!--
+                        Slider controls will be inserted here
+                        dynamically after the user makes a selection.
+                    -->
+
+            <div class="selected-entry-sliders" id="selectedEntrySliders"></div>
+          </fieldset>
+
+          <!-- =========================================
+                     WRITING
+                ========================================== -->
+
+          <div class="form-group">
+            <label for="entryNote">
+              Want to put anything into words?
+
+              <span class="optional-label"> optional </span>
+            </label>
+
+            <textarea
+              id="entryNote"
+              name="entryNote"
+              rows="5"
+              maxlength="1000"
+              placeholder="Write as much or as little as you'd like..."
+            ></textarea>
+          </div>
+
+          <!-- =========================================
+                     ACTIONS
+                ========================================== -->
+
+          <div class="entry-form__actions">
+            <button
+              class="button button--secondary"
+              id="cancelEntryButton"
+              type="button"
+            >
+              Not now
+            </button>
+
+            <button class="button button--primary" type="submit">
+              Add this moment
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         EMOJI PICKER
+         -----------------------------------------------------
+         Emoji data will be populated dynamically later.
+
+         This lets us support a much broader emoji library
+         instead of manually hard-coding six emojis.
+    ====================================================== -->
+
+    <div
+      class="modal emoji-picker-modal"
+      id="emojiPickerModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="emojiPickerTitle"
+      hidden
+    >
+      <div class="modal__backdrop" data-close-emoji-picker></div>
+
+      <div class="modal__panel emoji-picker-modal__panel">
+        <header class="modal__header">
+          <div>
+            <span class="modal__eyebrow"> Make it visual </span>
+
+            <h2 id="emojiPickerTitle">Choose an emoji</h2>
+
+            <p>Pick whatever makes sense to you. There is no correct choice.</p>
+          </div>
+
+          <button
+            class="icon-button"
+            id="closeEmojiPickerButton"
+            type="button"
+            aria-label="Close emoji picker"
+          >
+            ×
+          </button>
+        </header>
+
+        <div class="emoji-picker-search">
+          <label class="visually-hidden" for="emojiSearch">
+            Search emojis
+          </label>
+
+          <input
+            id="emojiSearch"
+            type="search"
+            placeholder="Search emojis..."
+            autocomplete="off"
+          />
+        </div>
+
+        <div
+          class="emoji-category-tabs"
+          role="tablist"
+          aria-label="Emoji categories"
+        >
+          <button
+            class="emoji-category-tab emoji-category-tab--active"
+            type="button"
+            data-emoji-category="recent"
+          >
+            Recent
+          </button>
+
+          <button
+            class="emoji-category-tab"
+            type="button"
+            data-emoji-category="faces"
+          >
+            Faces
+          </button>
+
+          <button
+            class="emoji-category-tab"
+            type="button"
+            data-emoji-category="people"
+          >
+            People
+          </button>
+
+          <button
+            class="emoji-category-tab"
+            type="button"
+            data-emoji-category="nature"
+          >
+            Nature
+          </button>
+
+          <button
+            class="emoji-category-tab"
+            type="button"
+            data-emoji-category="food"
+          >
+            Food
+          </button>
+
+          <button
+            class="emoji-category-tab"
+            type="button"
+            data-emoji-category="activities"
+          >
+            Activities
+          </button>
+
+          <button
+            class="emoji-category-tab"
+            type="button"
+            data-emoji-category="objects"
+          >
+            Objects
+          </button>
+
+          <button
+            class="emoji-category-tab"
+            type="button"
+            data-emoji-category="symbols"
+          >
+            Symbols
+          </button>
+        </div>
+
+        <div class="emoji-picker-grid" id="emojiPickerGrid" aria-live="polite">
+          <div class="empty-state">
+            <span class="empty-state__icon" aria-hidden="true"> ☺ </span>
+
+            <p>Emoji library will appear here.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         SLIDER LIBRARY
+    ====================================================== -->
+
+    <div
+      class="modal slider-library-modal"
+      id="sliderLibraryModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="sliderLibraryTitle"
+      hidden
+    >
+      <div class="modal__backdrop" data-close-slider-library></div>
+
+      <div class="modal__panel slider-library-modal__panel">
+        <header class="modal__header">
+          <div>
+            <span class="modal__eyebrow"> Build your reflection </span>
+
+            <h2 id="sliderLibraryTitle">Choose your sliders</h2>
+
+            <p>
+              Pick whatever feels useful. There is no minimum and no maximum you
+              need to reach.
+            </p>
+          </div>
+
+          <button
+            class="icon-button"
+            id="closeSliderLibraryButton"
+            type="button"
+            aria-label="Close slider library"
+          >
+            ×
+          </button>
+        </header>
+
+        <div class="slider-library-toolbar">
+          <label class="visually-hidden" for="sliderSearch">
+            Search reflection sliders
+          </label>
+
+          <input
+            id="sliderSearch"
+            type="search"
+            placeholder="Search sliders..."
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="slider-library" id="sliderLibrary">
+          <!-- =========================================
+                     OVERALL EXPERIENCE
+                ========================================== -->
+
+          <section class="slider-category" data-slider-category="overall">
+            <header class="slider-category__heading">
+              <span aria-hidden="true"> ◌ </span>
+
+              <div>
+                <h3>Overall experience</h3>
+
+                <p>
+                  Broad ways of describing how strong or manageable this moment
+                  feels.
+                </p>
+              </div>
+            </header>
+
+            <div class="slider-option-grid">
+              <label
+                class="slider-option"
+                data-slider-id="intensity"
+                data-description="How strong this experience feels right now."
+              >
+                <input type="checkbox" value="intensity" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ✦ </span>
+
+                <span class="slider-option__content">
+                  <strong> Intensity </strong>
+
+                  <small> How strong does this feel? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="intensity"
+                  aria-label="What does intensity mean?"
+                >
+                  ?
+                </button>
+              </label>
+
+              <label
+                class="slider-option"
+                data-slider-id="overwhelm"
+                data-description="How much this moment feels like too much to handle at once."
+              >
+                <input type="checkbox" value="overwhelm" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ≋ </span>
+
+                <span class="slider-option__content">
+                  <strong> Overwhelm </strong>
+
+                  <small> How much feels like too much? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="overwhelm"
+                  aria-label="What does overwhelm mean?"
+                >
+                  ?
+                </button>
+              </label>
+
+              <label
+                class="slider-option"
+                data-slider-id="ease"
+                data-description="How easy or difficult it feels to be in this moment."
+              >
+                <input type="checkbox" value="ease" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ~ </span>
+
+                <span class="slider-option__content">
+                  <strong> Ease </strong>
+
+                  <small> How easy does this moment feel? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="ease"
+                  aria-label="What does ease mean?"
+                >
+                  ?
+                </button>
+              </label>
+
+              <label
+                class="slider-option"
+                data-slider-id="sense-of-control"
+                data-description="How much you feel able to influence what is happening right now."
+              >
+                <input type="checkbox" value="sense-of-control" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ◉ </span>
+
+                <span class="slider-option__content">
+                  <strong> Sense of control </strong>
+
+                  <small> How much can you influence what's happening? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="sense-of-control"
+                  aria-label="What does sense of control mean?"
+                >
+                  ?
+                </button>
+              </label>
+            </div>
+          </section>
+
+          <!-- =========================================
+                     BODY
+                ========================================== -->
+
+          <section class="slider-category" data-slider-category="body">
+            <header class="slider-category__heading">
+              <span aria-hidden="true"> ◒ </span>
+
+              <div>
+                <h3>Body</h3>
+
+                <p>Things you may notice physically.</p>
+              </div>
+            </header>
+
+            <div class="slider-option-grid">
+              <label
+                class="slider-option"
+                data-slider-id="heaviness"
+                data-description="How heavy or weighed-down your body feels."
+              >
+                <input type="checkbox" value="heaviness" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ▼ </span>
+
+                <span class="slider-option__content">
+                  <strong> Heaviness </strong>
+
+                  <small> How heavy does your body feel? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="heaviness"
+                  aria-label="What does heaviness mean?"
+                >
+                  ?
+                </button>
+              </label>
+
+              <label
+                class="slider-option"
+                data-slider-id="tension"
+                data-description="How tight, stiff, or wound-up your body feels."
+              >
+                <input type="checkbox" value="tension" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ↔ </span>
+
+                <span class="slider-option__content">
+                  <strong> Tension </strong>
+
+                  <small> How tight or wound-up do you feel? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="tension"
+                  aria-label="What does tension mean?"
+                >
+                  ?
+                </button>
+              </label>
+
+              <label
+                class="slider-option"
+                data-slider-id="physical-energy"
+                data-description="How much energy your body feels like it has."
+              >
+                <input type="checkbox" value="physical-energy" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ⚡ </span>
+
+                <span class="slider-option__content">
+                  <strong> Physical energy </strong>
+
+                  <small> How much energy does your body have? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="physical-energy"
+                  aria-label="What does physical energy mean?"
+                >
+                  ?
+                </button>
+              </label>
+
+              <label
+                class="slider-option"
+                data-slider-id="tiredness"
+                data-description="How physically tired or worn-out you feel."
+              >
+                <input type="checkbox" value="tiredness" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ◡ </span>
+
+                <span class="slider-option__content">
+                  <strong> Tiredness </strong>
+
+                  <small> How tired does your body feel? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="tiredness"
+                  aria-label="What does tiredness mean?"
+                >
+                  ?
+                </button>
+              </label>
+
+              <label
+                class="slider-option"
+                data-slider-id="restlessness"
+                data-description="How difficult it feels for your body to stay still or settle."
+              >
+                <input type="checkbox" value="restlessness" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ≋ </span>
+
+                <span class="slider-option__content">
+                  <strong> Restlessness </strong>
+
+                  <small> How hard is it to settle? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="restlessness"
+                  aria-label="What does restlessness mean?"
+                >
+                  ?
+                </button>
+              </label>
+
+              <label
+                class="slider-option"
+                data-slider-id="physical-comfort"
+                data-description="How comfortable your body feels right now."
+              >
+                <input type="checkbox" value="physical-comfort" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ◯ </span>
+
+                <span class="slider-option__content">
+                  <strong> Physical comfort </strong>
+
+                  <small> How comfortable does your body feel? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="physical-comfort"
+                  aria-label="What does physical comfort mean?"
+                >
+                  ?
+                </button>
+              </label>
+            </div>
+          </section>
+
+          <!-- =========================================
+                     MIND / THINKING
+                ========================================== -->
+
+          <section class="slider-category" data-slider-category="mind">
+            <header class="slider-category__heading">
+              <span aria-hidden="true"> ◇ </span>
+
+              <div>
+                <h3>Thinking</h3>
+
+                <p>Notice how your mind feels and how easy it is to think.</p>
+              </div>
+            </header>
+
+            <div class="slider-option-grid">
+              <label
+                class="slider-option"
+                data-slider-id="mental-load"
+                data-description="How much your mind feels like it is holding or dealing with at once."
+              >
+                <input type="checkbox" value="mental-load" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ▤ </span>
+
+                <span class="slider-option__content">
+                  <strong> Mental load </strong>
+
+                  <small> How much is your mind carrying? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="mental-load"
+                  aria-label="What does mental load mean?"
+                >
+                  ?
+                </button>
+              </label>
+
+              <label
+                class="slider-option"
+                data-slider-id="mental-clarity"
+                data-description="How clear or foggy your thinking feels."
+              >
+                <input type="checkbox" value="mental-clarity" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ◇ </span>
+
+                <span class="slider-option__content">
+                  <strong> Mental clarity </strong>
+
+                  <small> How clear does your thinking feel? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="mental-clarity"
+                  aria-label="What does mental clarity mean?"
+                >
+                  ?
+                </button>
+              </label>
+
+              <label
+                class="slider-option"
+                data-slider-id="focus"
+                data-description="How easy it feels to keep your attention on one thing."
+              >
+                <input type="checkbox" value="focus" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ◎ </span>
+
+                <span class="slider-option__content">
+                  <strong> Focus </strong>
+
+                  <small> How easy is it to stay on one thing? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="focus"
+                  aria-label="What does focus mean?"
+                >
+                  ?
+                </button>
+              </label>
+
+              <label
+                class="slider-option"
+                data-slider-id="thought-speed"
+                data-description="How slow or fast your thoughts seem to be moving."
+              >
+                <input type="checkbox" value="thought-speed" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ≫ </span>
+
+                <span class="slider-option__content">
+                  <strong> Thought speed </strong>
+
+                  <small> How quickly are your thoughts moving? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="thought-speed"
+                  aria-label="What does thought speed mean?"
+                >
+                  ?
+                </button>
+              </label>
+
+              <label
+                class="slider-option"
+                data-slider-id="certainty"
+                data-description="How sure or unsure you feel about what is happening or what to do next."
+              >
+                <input type="checkbox" value="certainty" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ? </span>
+
+                <span class="slider-option__content">
+                  <strong> Certainty </strong>
+
+                  <small> How sure do things feel right now? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="certainty"
+                  aria-label="What does certainty mean?"
+                >
+                  ?
+                </button>
+              </label>
+
+              <label
+                class="slider-option"
+                data-slider-id="mental-energy"
+                data-description="How much thinking energy you feel like you have available."
+              >
+                <input type="checkbox" value="mental-energy" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ✧ </span>
+
+                <span class="slider-option__content">
+                  <strong> Mental energy </strong>
+
+                  <small> How much thinking energy do you have? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="mental-energy"
+                  aria-label="What does mental energy mean?"
+                >
+                  ?
+                </button>
+              </label>
+            </div>
+          </section>
+
+          <!-- =========================================
+                     ENERGY & ACTION
+                ========================================== -->
+
+          <section class="slider-category" data-slider-category="action">
+            <header class="slider-category__heading">
+              <span aria-hidden="true"> △ </span>
+
+              <div>
+                <h3>Energy &amp; action</h3>
+
+                <p>Notice how ready or able you feel to do something.</p>
+              </div>
+            </header>
+
+            <div class="slider-option-grid">
+              <label
+                class="slider-option"
+                data-slider-id="motivation"
+                data-description="How much you feel like starting or continuing something."
+              >
+                <input type="checkbox" value="motivation" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ↑ </span>
+
+                <span class="slider-option__content">
+                  <strong> Motivation </strong>
+
+                  <small> How much do you feel like doing something? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="motivation"
+                  aria-label="What does motivation mean?"
+                >
+                  ?
+                </button>
+              </label>
+
+              <label
+                class="slider-option"
+                data-slider-id="interest"
+                data-description="How interested or engaged you feel in what you are doing."
+              >
+                <input type="checkbox" value="interest" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ✦ </span>
+
+                <span class="slider-option__content">
+                  <strong> Interest </strong>
+
+                  <small> How interested do you feel? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="interest"
+                  aria-label="What does interest mean?"
+                >
+                  ?
+                </button>
+              </label>
+
+              <label
+                class="slider-option"
+                data-slider-id="effort"
+                data-description="How much effort something feels like it is taking from you."
+              >
+                <input type="checkbox" value="effort" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ↗ </span>
+
+                <span class="slider-option__content">
+                  <strong> Effort </strong>
+
+                  <small> How much effort does this take? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="effort"
+                  aria-label="What does effort mean?"
+                >
+                  ?
+                </button>
+              </label>
+
+              <label
+                class="slider-option"
+                data-slider-id="patience"
+                data-description="How much room you feel you have to wait, continue, or deal with small difficulties."
+              >
+                <input type="checkbox" value="patience" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ◷ </span>
+
+                <span class="slider-option__content">
+                  <strong> Patience </strong>
+
+                  <small> How much patience do you have right now? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="patience"
+                  aria-label="What does patience mean?"
+                >
+                  ?
+                </button>
+              </label>
+            </div>
+          </section>
+
+          <!-- =========================================
+                     SOCIAL
+                ========================================== -->
+
+          <section class="slider-category" data-slider-category="social">
+            <header class="slider-category__heading">
+              <span aria-hidden="true"> ♡ </span>
+
+              <div>
+                <h3>Social</h3>
+
+                <p>Things you may notice when being around other people.</p>
+              </div>
+            </header>
+
+            <div class="slider-option-grid">
+              <label
+                class="slider-option"
+                data-slider-id="social-energy"
+                data-description="How much energy you feel you have for being around or interacting with other people."
+              >
+                <input type="checkbox" value="social-energy" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ☺ </span>
+
+                <span class="slider-option__content">
+                  <strong> Social energy </strong>
+
+                  <small> How much energy do you have for people? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="social-energy"
+                  aria-label="What does social energy mean?"
+                >
+                  ?
+                </button>
+              </label>
+
+              <label
+                class="slider-option"
+                data-slider-id="connectedness"
+                data-description="How connected or separate you feel from the people around you."
+              >
+                <input type="checkbox" value="connectedness" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ∞ </span>
+
+                <span class="slider-option__content">
+                  <strong> Connectedness </strong>
+
+                  <small> How connected do you feel to others? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="connectedness"
+                  aria-label="What does connectedness mean?"
+                >
+                  ?
+                </button>
+              </label>
+
+              <label
+                class="slider-option"
+                data-slider-id="social-comfort"
+                data-description="How comfortable you feel being around other people right now."
+              >
+                <input type="checkbox" value="social-comfort" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ◡ </span>
+
+                <span class="slider-option__content">
+                  <strong> Social comfort </strong>
+
+                  <small> How comfortable do you feel around others? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="social-comfort"
+                  aria-label="What does social comfort mean?"
+                >
+                  ?
+                </button>
+              </label>
+
+              <label
+                class="slider-option"
+                data-slider-id="need-for-space"
+                data-description="How much you feel like having some time or space away from other people."
+              >
+                <input type="checkbox" value="need-for-space" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ↔ </span>
+
+                <span class="slider-option__content">
+                  <strong> Need for space </strong>
+
+                  <small> How much space do you want from others? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="need-for-space"
+                  aria-label="What does need for space mean?"
+                >
+                  ?
+                </button>
+              </label>
+            </div>
+          </section>
+
+          <!-- =========================================
+                     SURROUNDINGS / SENSORY
+                ========================================== -->
+
+          <section class="slider-category" data-slider-category="surroundings">
+            <header class="slider-category__heading">
+              <span aria-hidden="true"> ✺ </span>
+
+              <div>
+                <h3>Surroundings</h3>
+
+                <p>How the space around you feels.</p>
+              </div>
+            </header>
+
+            <div class="slider-option-grid">
+              <label
+                class="slider-option"
+                data-slider-id="sensory-load"
+                data-description="How much sound, light, movement, touch, or other sensory information feels like it is happening around you."
+              >
+                <input type="checkbox" value="sensory-load" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ✺ </span>
+
+                <span class="slider-option__content">
+                  <strong> Sensory load </strong>
+
+                  <small> How much is happening around your senses? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="sensory-load"
+                  aria-label="What does sensory load mean?"
+                >
+                  ?
+                </button>
+              </label>
+
+              <label
+                class="slider-option"
+                data-slider-id="noise-comfort"
+                data-description="How comfortable the amount of sound around you feels."
+              >
+                <input type="checkbox" value="noise-comfort" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ♪ </span>
+
+                <span class="slider-option__content">
+                  <strong> Noise comfort </strong>
+
+                  <small> How comfortable is the sound around you? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="noise-comfort"
+                  aria-label="What does noise comfort mean?"
+                >
+                  ?
+                </button>
+              </label>
+
+              <label
+                class="slider-option"
+                data-slider-id="visual-stimulation"
+                data-description="How visually busy, bright, or active your surroundings feel."
+              >
+                <input type="checkbox" value="visual-stimulation" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ◉ </span>
+
+                <span class="slider-option__content">
+                  <strong> Visual stimulation </strong>
+
+                  <small> How visually busy does your space feel? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="visual-stimulation"
+                  aria-label="What does visual stimulation mean?"
+                >
+                  ?
+                </button>
+              </label>
+
+              <label
+                class="slider-option"
+                data-slider-id="space-comfort"
+                data-description="How comfortable the physical space around you feels."
+              >
+                <input type="checkbox" value="space-comfort" />
+
+                <span class="slider-option__icon" aria-hidden="true"> □ </span>
+
+                <span class="slider-option__content">
+                  <strong> Space comfort </strong>
+
+                  <small> How comfortable does this place feel? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="space-comfort"
+                  aria-label="What does space comfort mean?"
+                >
+                  ?
+                </button>
+              </label>
+            </div>
+          </section>
+
+          <!-- =========================================
+                     REST & RECOVERY
+                ========================================== -->
+
+          <section class="slider-category" data-slider-category="rest">
+            <header class="slider-category__heading">
+              <span aria-hidden="true"> ☾ </span>
+
+              <div>
+                <h3>Rest &amp; recovery</h3>
+
+                <p>Things you may notice when slowing down or recovering.</p>
+              </div>
+            </header>
+
+            <div class="slider-option-grid">
+              <label
+                class="slider-option"
+                data-slider-id="sleepiness"
+                data-description="How ready your body and mind feel for sleep."
+              >
+                <input type="checkbox" value="sleepiness" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ☾ </span>
+
+                <span class="slider-option__content">
+                  <strong> Sleepiness </strong>
+
+                  <small> How ready do you feel for sleep? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="sleepiness"
+                  aria-label="What does sleepiness mean?"
+                >
+                  ?
+                </button>
+              </label>
+
+              <label
+                class="slider-option"
+                data-slider-id="restedness"
+                data-description="How rested or refreshed you feel."
+              >
+                <input type="checkbox" value="restedness" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ☀ </span>
+
+                <span class="slider-option__content">
+                  <strong> Restedness </strong>
+
+                  <small> How rested do you feel? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="restedness"
+                  aria-label="What does restedness mean?"
+                >
+                  ?
+                </button>
+              </label>
+
+              <label
+                class="slider-option"
+                data-slider-id="ability-to-unwind"
+                data-description="How easy or difficult it feels to slow down and relax after what you have been doing."
+              >
+                <input type="checkbox" value="ability-to-unwind" />
+
+                <span class="slider-option__icon" aria-hidden="true"> ~ </span>
+
+                <span class="slider-option__content">
+                  <strong> Ability to unwind </strong>
+
+                  <small> How easy is it to slow down? </small>
+                </span>
+
+                <button
+                  class="slider-info-button"
+                  type="button"
+                  data-slider-info="ability-to-unwind"
+                  aria-label="What does ability to unwind mean?"
+                >
+                  ?
+                </button>
+              </label>
+            </div>
+          </section>
+        </div>
+
+        <div class="slider-library-footer">
+          <span id="sliderLibrarySelectionCount"> 0 sliders selected </span>
+
+          <div class="modal__actions">
+            <button
+              class="button button--secondary"
+              id="cancelSliderSelectionButton"
+              type="button"
+            >
+              Cancel
+            </button>
+
+            <button
+              class="button button--primary"
+              id="confirmSliderSelectionButton"
+              type="button"
+            >
+              Use selected sliders
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         SLIDER INFORMATION
+    ====================================================== -->
+
+    <div
+      class="modal slider-info-modal"
+      id="sliderInfoModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="sliderInfoTitle"
+      hidden
+    >
+      <div class="modal__backdrop" data-close-slider-info></div>
+
+      <div class="modal__panel slider-info-modal__panel">
+        <header class="modal__header">
+          <div>
+            <span class="modal__eyebrow"> What does this mean? </span>
+
+            <h2 id="sliderInfoTitle">Intensity</h2>
+          </div>
+
+          <button
+            class="icon-button"
+            id="closeSliderInfoButton"
+            type="button"
+            aria-label="Close explanation"
+          >
+            ×
+          </button>
+        </header>
+
+        <div class="slider-info-content">
+          <span
+            class="slider-info-content__icon"
+            id="sliderInfoIcon"
+            aria-hidden="true"
+          >
+            ✦
+          </span>
+
+          <p id="sliderInfoDescription">
+            How strong this experience feels right now.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         HELP / ABOUT
+    ====================================================== -->
+
+    <div
+      class="modal help-modal"
+      id="helpModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="helpModalTitle"
+      hidden
+    >
+      <div class="modal__backdrop" data-close-help-modal></div>
+
+      <div class="modal__panel">
+        <header class="modal__header">
+          <div>
+            <span class="modal__eyebrow"> About </span>
+
+            <h2 id="helpModalTitle">What is Lega?</h2>
+          </div>
+
+          <button
+            class="icon-button"
+            id="closeHelpModalButton"
+            type="button"
+            aria-label="Close"
+          >
+            ×
+          </button>
+        </header>
+
+        <p>
+          Lega gives you a flexible way to record moments, sensations, and
+          experiences without requiring you to name an emotion first.
+        </p>
+
+        <p>
+          Your timeline is a reflection of what you choose to record. It is not
+          a diagnosis or mental health assessment.
+        </p>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         SETTINGS
+    ====================================================== -->
+
+    <div
+      class="modal settings-modal"
+      id="settingsModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="settingsModalTitle"
+      hidden
+    >
+      <div class="modal__backdrop" data-close-settings-modal></div>
+
+      <div class="modal__panel settings-modal__panel">
+        <header class="modal__header">
+          <div>
+            <span class="modal__eyebrow"> Make Lega comfortable for you </span>
+
+            <h2 id="settingsModalTitle">Settings</h2>
+          </div>
+
+          <button
+            class="icon-button"
+            id="closeSettingsModalButton"
+            type="button"
+            aria-label="Close settings"
+          >
+            ×
+          </button>
+        </header>
+
+        <!-- COLOUR PALETTE -->
+
+        <section
+          class="settings-group"
+          aria-labelledby="appearanceSettingsTitle"
+        >
+          <div class="settings-group__heading">
+            <h3 id="appearanceSettingsTitle">Colour palette</h3>
+
+            <p>
+              Choose a visual environment that feels comfortable. Colours do not
+              represent emotions.
+            </p>
+          </div>
+
+          <div class="theme-options">
+            <button
+              class="theme-option"
+              type="button"
+              data-theme="soft"
+              aria-pressed="false"
+            >
+              <span
+                class="theme-preview theme-preview--warm"
+                aria-hidden="true"
+              >
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+
+              <span class="theme-option__name"> Warm </span>
+
+              <span class="theme-option__description">
+                Soft bone and cream
+              </span>
+            </button>
+
+            <button
+              class="theme-option"
+              type="button"
+              data-theme="sage-light"
+              aria-pressed="false"
+            >
+              <span
+                class="theme-preview theme-preview--sage-light"
+                aria-hidden="true"
+              >
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+
+              <span class="theme-option__name"> Soft Sage </span>
+
+              <span class="theme-option__description">
+                Light muted greens
+              </span>
+            </button>
+
+            <button
+              class="theme-option"
+              type="button"
+              data-theme="sage-deep"
+              aria-pressed="false"
+            >
+              <span
+                class="theme-preview theme-preview--sage-deep"
+                aria-hidden="true"
+              >
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+
+              <span class="theme-option__name"> Deep Sage </span>
+
+              <span class="theme-option__description">
+                Darker earthy greens
+              </span>
+            </button>
+
+            <button
+              class="theme-option"
+              type="button"
+              data-theme="blue-soft"
+              aria-pressed="false"
+            >
+              <span
+                class="theme-preview theme-preview--blue-soft"
+                aria-hidden="true"
+              >
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+
+              <span class="theme-option__name"> Soft Blue </span>
+
+              <span class="theme-option__description"> Dusty blue-grey </span>
+            </button>
+
+            <button
+              class="theme-option"
+              type="button"
+              data-theme="lavender-soft"
+              aria-pressed="false"
+            >
+              <span
+                class="theme-preview theme-preview--lavender-soft"
+                aria-hidden="true"
+              >
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+
+              <span class="theme-option__name"> Lavender </span>
+
+              <span class="theme-option__description"> Muted purple-grey </span>
+            </button>
+
+            <button
+              class="theme-option"
+              type="button"
+              data-theme="dark"
+              aria-pressed="false"
+            >
+              <span
+                class="theme-preview theme-preview--dark"
+                aria-hidden="true"
+              >
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+
+              <span class="theme-option__name"> Soft Dark </span>
+
+              <span class="theme-option__description">
+                Gentle grey and slate
+              </span>
+            </button>
+
+            <button
+              class="theme-option"
+              type="button"
+              data-theme="high-contrast"
+              aria-pressed="false"
+            >
+              <span
+                class="theme-preview theme-preview--contrast"
+                aria-hidden="true"
+              >
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+
+              <span class="theme-option__name"> High Contrast </span>
+
+              <span class="theme-option__description">
+                Stronger visual separation
+              </span>
+            </button>
+          </div>
+        </section>
+
+        <!-- TEXT SIZE -->
+
+        <section class="settings-group" aria-labelledby="textSizeSettingsTitle">
+          <div class="settings-group__heading">
+            <h3 id="textSizeSettingsTitle">Text size</h3>
+
+            <p>Increase text throughout Lega whenever you need it.</p>
+          </div>
+
+          <div
+            class="text-size-options"
+            role="group"
+            aria-label="Choose text size"
+          >
+            <button
+              class="text-size-option text-size-option--active"
+              type="button"
+              data-text-size="standard"
+              aria-pressed="true"
+            >
+              <span class="text-size-option__preview"> Aa </span>
+
+              <span> Standard </span>
+            </button>
+
+            <button
+              class="text-size-option"
+              type="button"
+              data-text-size="large"
+              aria-pressed="false"
+            >
+              <span
+                class="text-size-option__preview text-size-option__preview--large"
+              >
+                Aa
+              </span>
+
+              <span> Large </span>
+            </button>
+
+            <button
+              class="text-size-option"
+              type="button"
+              data-text-size="extra-large"
+              aria-pressed="false"
+            >
+              <span
+                class="text-size-option__preview text-size-option__preview--extra-large"
+              >
+                Aa
+              </span>
+
+              <span> Extra Large </span>
+            </button>
+          </div>
+        </section>
+
+        <!-- TIMELINE -->
+
+        <section class="settings-group" aria-labelledby="timelineSettingsTitle">
+          <div class="settings-group__heading">
+            <h3 id="timelineSettingsTitle">Mood timeline</h3>
+
+            <p>Adjust how visual information appears on the radial timeline.</p>
+          </div>
+
+          <label class="settings-toggle">
+            <input type="checkbox" id="showMoodPatternsSetting" checked />
+
+            <span>
+              <strong> Show icons and patterns </strong>
+
+              <small> Adds another visual cue alongside colour. </small>
+            </span>
+          </label>
+        </section>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script src="main.js"></script>
+    <script src="function.js"></script>
+    <script src="aesthetic.js"></script>
+  </body>
+</html>
