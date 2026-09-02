@@ -30,9 +30,12 @@
     "lavender-soft",
     "dark",
     "high-contrast",
+    "true-black",
   ];
 
   const VALID_TEXT_SIZES = ["standard", "large", "extra-large"];
+
+  const VALID_TYPOGRAPHIES = ["clean", "friendly", "scrapbook"];
 
   const LEGACY_COLOURS = {
     peach: "#eebea8",
@@ -54,6 +57,8 @@
     showMoodPatterns: true,
 
     textSize: "standard",
+
+    typography: "clean",
   };
 
   /* =====================================================
@@ -120,6 +125,22 @@
     dom.timePatternChart = document.getElementById("timePatternChart");
 
     dom.dimensionSummary = document.getElementById("dimensionSummary");
+
+    dom.monthlyEntryCount = document.getElementById("monthlyEntryCount");
+
+    dom.monthlyOverview = document.getElementById("monthlyOverview");
+
+    dom.monthlyTimePatternChart = document.getElementById(
+      "monthlyTimePatternChart",
+    );
+
+    dom.monthlyDimensionSummary = document.getElementById(
+      "monthlyDimensionSummary",
+    );
+
+    dom.monthlyReflectionSummary = document.getElementById(
+      "monthlyReflectionSummary",
+    );
   }
 
   /* =====================================================
@@ -1026,6 +1047,39 @@
       .map(clone);
   }
 
+  function getMonthStart(dayKey) {
+    const date = dateFromDayKey(dayKey);
+
+    if (!date) {
+      return null;
+    }
+
+    date.setDate(1);
+
+    return date;
+  }
+
+  function getEntriesForMonth(dayKey) {
+    const start = getMonthStart(dayKey);
+
+    if (!start) {
+      return [];
+    }
+
+    const end = new Date(start.getTime());
+
+    end.setMonth(end.getMonth() + 1);
+
+    return state.entries
+      .filter((entry) => {
+        const day = dateFromDayKey(entry.dayKey);
+
+        return day && day >= start && day < end;
+      })
+      .sort((first, second) => first.timestamp - second.timestamp)
+      .map(clone);
+  }
+
   function getTimeDistribution(entries) {
     const periods = {
       "Early morning": 0,
@@ -1057,6 +1111,97 @@
   /* =====================================================
        22. INSIGHTS
     ====================================================== */
+
+  function getMostUsedDimensions(entries, limit = 3) {
+    const counts = {};
+
+    entries.forEach((entry) => {
+      Object.keys(entry.dimensions || {}).forEach((dimension) => {
+        counts[dimension] = (counts[dimension] || 0) + 1;
+      });
+    });
+
+    return Object.entries(counts)
+      .sort((first, second) => {
+        if (second[1] !== first[1]) {
+          return second[1] - first[1];
+        }
+
+        return first[0].localeCompare(second[0]);
+      })
+      .slice(0, limit)
+      .map(([dimension, count]) => ({
+        id: dimension,
+        count,
+      }));
+  }
+
+  function getMostCommonTimePeriod(entries) {
+    if (!entries.length) {
+      return null;
+    }
+
+    const distribution = getTimeDistribution(entries);
+
+    const sorted = Object.entries(distribution).sort(
+      (first, second) => second[1] - first[1],
+    );
+
+    if (!sorted.length || sorted[0][1] <= 0) {
+      return null;
+    }
+
+    return {
+      label: sorted[0][0],
+      count: sorted[0][1],
+    };
+  }
+
+  function buildMonthlyReflectionSummary(entries) {
+    if (!entries.length) {
+      return "Your monthly reflection will appear here as more moments are recorded.";
+    }
+
+    const activeDays = new Set(entries.map((entry) => entry.dayKey)).size;
+
+    const parts = [
+      `You recorded ${entries.length} ${
+        entries.length === 1 ? "moment" : "moments"
+      } across ${activeDays} ${activeDays === 1 ? "day" : "days"} this month.`,
+    ];
+
+    const mostCommonTime = getMostCommonTimePeriod(entries);
+
+    if (entries.length >= 2 && mostCommonTime) {
+      parts.push(
+        `You most often recorded moments during ${mostCommonTime.label.toLowerCase()}.`,
+      );
+    }
+
+    const recurringDimensions = getMostUsedDimensions(entries, 3);
+
+    if (recurringDimensions.length) {
+      const labels = recurringDimensions.map((item) =>
+        formatDimensionName(item.id),
+      );
+
+      if (labels.length === 1) {
+        parts.push(`The dimension you returned to most was ${labels[0]}.`);
+      } else {
+        const finalLabel = labels.pop();
+
+        parts.push(
+          `Dimensions you returned to often included ${labels.join(", ")} and ${finalLabel}.`,
+        );
+      }
+    }
+
+    parts.push(
+      "Use these patterns as prompts for reflection rather than labels or conclusions.",
+    );
+
+    return parts.join(" ");
+  }
 
   function renderInsights() {
     const entries = getEntriesForWeek(state.activeDayKey);
@@ -1105,6 +1250,67 @@
           .join("  ·  ");
       }
     }
+
+    const monthlyEntries = getEntriesForMonth(state.activeDayKey);
+
+    if (dom.monthlyEntryCount) {
+      dom.monthlyEntryCount.textContent = String(monthlyEntries.length);
+    }
+
+    if (dom.monthlyOverview) {
+      if (!monthlyEntries.length) {
+        dom.monthlyOverview.textContent =
+          "Your monthly visualisation will appear here as you add moments.";
+      } else {
+        const activeDays = new Set(monthlyEntries.map((entry) => entry.dayKey))
+          .size;
+
+        const monthDate = getMonthStart(state.activeDayKey);
+
+        const monthName = monthDate
+          ? new Intl.DateTimeFormat("en-AU", {
+              month: "long",
+              year: "numeric",
+            }).format(monthDate)
+          : "this month";
+
+        dom.monthlyOverview.textContent = `${activeDays} ${
+          activeDays === 1 ? "day" : "days"
+        } with recorded moments across ${monthName}.`;
+      }
+    }
+
+    if (dom.monthlyTimePatternChart) {
+      if (monthlyEntries.length < 2) {
+        dom.monthlyTimePatternChart.textContent = "Not enough entries yet.";
+      } else {
+        const mostCommonTime = getMostCommonTimePeriod(monthlyEntries);
+
+        dom.monthlyTimePatternChart.textContent = mostCommonTime
+          ? `You most often recorded moments during ${mostCommonTime.label.toLowerCase()}.`
+          : "No clear reflection rhythm yet.";
+      }
+    }
+
+    if (dom.monthlyDimensionSummary) {
+      const averages = getDimensionAverages(monthlyEntries);
+
+      const dimensions = Object.entries(averages);
+
+      if (!dimensions.length) {
+        dom.monthlyDimensionSummary.textContent =
+          "No reflection slider data yet.";
+      } else {
+        dom.monthlyDimensionSummary.textContent = dimensions
+          .map(([id, value]) => `${formatDimensionName(id)}: ${value}`)
+          .join("  ·  ");
+      }
+    }
+
+    if (dom.monthlyReflectionSummary) {
+      dom.monthlyReflectionSummary.textContent =
+        buildMonthlyReflectionSummary(monthlyEntries);
+    }
   }
 
   /* =====================================================
@@ -1151,6 +1357,10 @@
       textSize: VALID_TEXT_SIZES.includes(settings.textSize)
         ? settings.textSize
         : DEFAULT_SETTINGS.textSize,
+
+      typography: VALID_TYPOGRAPHIES.includes(settings.typography)
+        ? settings.typography
+        : DEFAULT_SETTINGS.typography,
     };
   }
 
@@ -1158,12 +1368,35 @@
     state.settings = normaliseSettings(readStorage(STORAGE_KEYS.settings, {}));
 
     applyPreferences();
+
+    /*
+       Save the normalised shape so older stored settings gain
+       newly introduced preferences without losing existing choices.
+    */
+    writeStorage(STORAGE_KEYS.settings, state.settings);
   }
 
   function applyPreferences() {
-    document.documentElement.dataset.theme = state.settings.theme;
+    const root = document.documentElement;
 
-    document.documentElement.dataset.textSize = state.settings.textSize;
+    root.dataset.theme = state.settings.theme;
+
+    root.dataset.textSize = state.settings.textSize;
+
+    root.dataset.typography = state.settings.typography;
+
+    /*
+       The original theme system inherits safely from <html>.
+       The new accessibility and typography refinements are scoped
+       to <body>, so mirror the preferences there as well.
+    */
+    if (document.body) {
+      document.body.dataset.theme = state.settings.theme;
+
+      document.body.dataset.textSize = state.settings.textSize;
+
+      document.body.dataset.typography = state.settings.typography;
+    }
   }
 
   function updateSetting(name, value) {
@@ -1176,6 +1409,10 @@
     }
 
     if (name === "textSize" && !VALID_TEXT_SIZES.includes(value)) {
+      return false;
+    }
+
+    if (name === "typography" && !VALID_TYPOGRAPHIES.includes(value)) {
       return false;
     }
 
@@ -1513,7 +1750,17 @@
 
     getEntriesForWeek,
 
+    getMonthStart,
+
+    getEntriesForMonth,
+
     getTimeDistribution,
+
+    getMostUsedDimensions,
+
+    getMostCommonTimePeriod,
+
+    buildMonthlyReflectionSummary,
 
     formatDimensionName,
 

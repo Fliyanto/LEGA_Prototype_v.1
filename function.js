@@ -17,6 +17,8 @@
    - Custom colour picker
    - Entry submission
    - Date selection
+   - Weekly / monthly insight switching
+   - Important information / warning access
    - Settings
 ========================================================= */
 
@@ -432,6 +434,26 @@
 
     dom.helpBackdrop = document.querySelector("[data-close-help-modal]");
 
+    /* ---------- Important information ---------- */
+
+    dom.warningButton = document.getElementById("warningButton");
+
+    dom.onboardingReadMoreButton = document.getElementById(
+      "onboardingReadMoreButton",
+    );
+
+    dom.warningModal = document.getElementById("warningModal");
+
+    dom.closeWarningModalButton = document.getElementById(
+      "closeWarningModalButton",
+    );
+
+    dom.warningModalDoneButton = document.getElementById(
+      "warningModalDoneButton",
+    );
+
+    dom.warningBackdrop = document.querySelector("[data-close-warning-modal]");
+
     /* ---------- Settings ---------- */
 
     dom.settingsModal = document.getElementById("settingsModal");
@@ -450,8 +472,22 @@
       ".text-size-option[data-text-size]",
     );
 
+    dom.typographyButtons = document.querySelectorAll(
+      ".typography-option[data-typography]",
+    );
+
     dom.showMoodPatternsSetting = document.getElementById(
       "showMoodPatternsSetting",
+    );
+
+    /* ---------- Insights range ---------- */
+
+    dom.insightRangeButtons = document.querySelectorAll(
+      ".range-selector__button[data-range]",
+    );
+
+    dom.insightRangeContents = document.querySelectorAll(
+      ".insights-range-content[data-insights-range]",
     );
 
     /* ---------- Main add button ---------- */
@@ -881,6 +917,14 @@
     window.dispatchEvent(new CustomEvent("lega:entered"));
   }
 
+  function openImportantInformation() {
+    openModal(dom.warningModal, dom.closeWarningModalButton);
+  }
+
+  function closeImportantInformation() {
+    closeModal(dom.warningModal);
+  }
+
   /* =====================================================
        9. PAGE NAVIGATION
     ====================================================== */
@@ -923,6 +967,34 @@
         detail: {
           pageID,
         },
+      }),
+    );
+  }
+
+  function switchInsightRange(range) {
+    if (range !== "week" && range !== "month") {
+      return;
+    }
+
+    dom.insightRangeButtons.forEach((button) => {
+      const active = button.dataset.range === range;
+
+      button.classList.toggle("range-selector__button--active", active);
+
+      button.setAttribute("aria-pressed", String(active));
+    });
+
+    dom.insightRangeContents.forEach((content) => {
+      const active = content.dataset.insightsRange === range;
+
+      content.hidden = !active;
+
+      content.classList.toggle("insights-range-content--active", active);
+    });
+
+    window.dispatchEvent(
+      new CustomEvent("lega:insights-range-changed", {
+        detail: { range },
       }),
     );
   }
@@ -1992,13 +2064,11 @@
   }
 
   /* =====================================================
-       23. TEMPORARY ENTRY EXTRA STORAGE
+       23. ENTRY EXTRA STORAGE
        -----------------------------------------------------
-       main.js still understands the original fixed
-       dimensions + preset colours.
-
-       Until main.js is expanded, store the complete new
-       entry model separately so no prototype data is lost.
+       Keep template context and the user's selected slider
+       set alongside the core entry. main.js now stores the
+       flexible dimensions and custom colour directly too.
     ====================================================== */
 
   function saveEntryExtras(entryID, extras) {
@@ -2039,20 +2109,7 @@
 
       emoji: state.entryDraft.emoji,
 
-      /*
-                   main.js will be expanded later to accept
-                   arbitrary hex colours.
-                */
-
       colour: state.entryDraft.colour,
-
-      /*
-                   main.js currently keeps the original
-                   dimension names it knows.
-
-                   The complete slider object is also stored
-                   below in entryExtras.
-                */
 
       dimensions: sliderValues,
     });
@@ -2219,6 +2276,14 @@
       button.setAttribute("aria-pressed", String(active));
     });
 
+    dom.typographyButtons.forEach((button) => {
+      const active = button.dataset.typography === settings.typography;
+
+      button.classList.toggle("typography-option--active", active);
+
+      button.setAttribute("aria-pressed", String(active));
+    });
+
     if (dom.showMoodPatternsSetting) {
       dom.showMoodPatternsSetting.checked = settings.showMoodPatterns !== false;
     }
@@ -2231,14 +2296,13 @@
   }
 
   function changeTextSize(button) {
-    /*
-           This saves the user's selection.
-
-           The actual typography scale will be designed
-           separately later, as planned.
-        */
-
     getLegaAPI()?.updateSetting("textSize", button.dataset.textSize);
+
+    syncSettingsUI();
+  }
+
+  function changeTypography(button) {
+    getLegaAPI()?.updateSetting("typography", button.dataset.typography);
 
     syncSettingsUI();
   }
@@ -2386,6 +2450,27 @@
       closeModal(dom.helpModal),
     );
 
+    /* ---------- Important information ---------- */
+
+    dom.warningButton?.addEventListener("click", openImportantInformation);
+
+    dom.onboardingReadMoreButton?.addEventListener(
+      "click",
+      openImportantInformation,
+    );
+
+    dom.closeWarningModalButton?.addEventListener(
+      "click",
+      closeImportantInformation,
+    );
+
+    dom.warningModalDoneButton?.addEventListener(
+      "click",
+      closeImportantInformation,
+    );
+
+    dom.warningBackdrop?.addEventListener("click", closeImportantInformation);
+
     /* ---------- Settings ---------- */
 
     const openSettings = () => {
@@ -2414,9 +2499,21 @@
       button.addEventListener("click", () => changeTextSize(button)),
     );
 
+    dom.typographyButtons.forEach((button) =>
+      button.addEventListener("click", () => changeTypography(button)),
+    );
+
     dom.showMoodPatternsSetting?.addEventListener(
       "change",
       changePatternSetting,
+    );
+
+    /* ---------- Insights range ---------- */
+
+    dom.insightRangeButtons.forEach((button) =>
+      button.addEventListener("click", () =>
+        switchInsightRange(button.dataset.range),
+      ),
     );
 
     /* ---------- Start entry ---------- */
@@ -2658,6 +2755,8 @@
     prepareOnboarding();
 
     resetEntryDraft();
+
+    switchInsightRange("week");
 
     updateColourPreview(null);
 

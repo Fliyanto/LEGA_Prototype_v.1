@@ -566,6 +566,19 @@
     renderMoodPatterns(state.latestTimeline.segments);
   }
 
+  function handleSettingsChanged() {
+    syncPatternSetting();
+
+    /*
+         Text-size and typography changes can slightly alter
+         the clock's rendered geometry at some responsive sizes.
+         Reposition markers once the browser has applied the new
+         styles, without changing the timeline data itself.
+    */
+
+    window.requestAnimationFrame(refreshTimelineGeometry);
+  }
+
   /* =====================================================
        14. PAGE TRANSITIONS
     ====================================================== */
@@ -644,7 +657,7 @@
 
     window.addEventListener("lega:entry-selected", handleEntrySelected);
 
-    window.addEventListener("lega:settings-changed", syncPatternSetting);
+    window.addEventListener("lega:settings-changed", handleSettingsChanged);
 
     window.addEventListener("lega:mood-pattern-setting-changed", (event) => {
       state.patternsEnabled = event.detail?.enabled !== false;

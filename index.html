@@ -15,6 +15,14 @@
     <!-- CSS -->
     <link rel="stylesheet" href="reset.css" />
     <link rel="stylesheet" href="style.css" />
+
+    <!-- Optional typography choices used by Settings -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&family=Patrick+Hand&display=swap"
+      rel="stylesheet"
+    />
   </head>
 
   <body>
@@ -100,28 +108,29 @@
 
           <div class="warning-card">
             <p>
-              Lega is designed for personal reflection and self-understanding.
+              Lega is designed for personal reflection and self-understanding,
+              not diagnosis, medical advice, or professional mental health care.
             </p>
 
             <ul>
-              <li>Lega does not diagnose mental health conditions.</li>
-
               <li>
-                Entries, patterns, colours, icons, sliders, and statistics
-                should not be interpreted as medical or psychological
-                assessments.
+                Entries, patterns, colours, icons, sliders, and statistics are
+                reflection tools, not medical or psychological assessments.
               </li>
 
               <li>
-                Lega is not therapy and is not a replacement for professional
-                healthcare or mental health support.
-              </li>
-
-              <li>
-                The meaning of your experiences remains yours. Lega helps you
-                reflect; it does not decide what you are feeling for you.
+                Lega can help you notice what you are experiencing, but it does
+                not decide what you are feeling for you.
               </li>
             </ul>
+
+            <button
+              class="warning-read-more"
+              id="onboardingReadMoreButton"
+              type="button"
+            >
+              Read the full information
+            </button>
           </div>
 
           <label class="acknowledgement">
@@ -173,6 +182,16 @@
             title="About Lega"
           >
             <span aria-hidden="true"> ? </span>
+          </button>
+
+          <button
+            class="icon-button warning-icon-button"
+            id="warningButton"
+            type="button"
+            aria-label="Read important information about Lega"
+            title="Important information"
+          >
+            <span aria-hidden="true"> △ </span>
           </button>
         </div>
 
@@ -484,78 +503,175 @@
           >
             <button
               class="range-selector__button range-selector__button--active"
+              id="weeklyRangeButton"
               type="button"
               data-range="week"
+              aria-pressed="true"
+              aria-controls="weeklyInsightsContent"
             >
               Week
             </button>
 
             <button
               class="range-selector__button"
+              id="monthlyRangeButton"
               type="button"
               data-range="month"
+              aria-pressed="false"
+              aria-controls="monthlyInsightsContent"
             >
               Month
             </button>
           </div>
 
-          <div class="insights-grid">
-            <article class="insight-card insight-card--large">
-              <div class="insight-card__heading">
-                <span class="insight-card__eyebrow"> This week </span>
+          <div
+            class="insights-range-content insights-range-content--active"
+            id="weeklyInsightsContent"
+            data-insights-range="week"
+          >
+            <div class="insights-grid">
+              <article class="insight-card insight-card--large">
+                <div class="insight-card__heading">
+                  <span class="insight-card__eyebrow"> This week </span>
 
-                <h2>Your week at a glance</h2>
-              </div>
+                  <h2>Your week at a glance</h2>
+                </div>
 
-              <div class="weekly-overview-placeholder" id="weeklyOverview">
-                <span> Weekly visualisation will appear here. </span>
-              </div>
-            </article>
+                <div class="weekly-overview-placeholder" id="weeklyOverview">
+                  <span> Weekly visualisation will appear here. </span>
+                </div>
+              </article>
 
-            <article class="insight-card">
-              <span class="insight-card__eyebrow"> Entries </span>
+              <article class="insight-card">
+                <span class="insight-card__eyebrow"> Entries </span>
 
-              <h2>Moments recorded</h2>
+                <h2>Moments recorded</h2>
 
-              <strong class="insight-stat" id="weeklyEntryCount"> 0 </strong>
+                <strong class="insight-stat" id="weeklyEntryCount"> 0 </strong>
 
-              <p>moments this week</p>
-            </article>
+                <p>moments this week</p>
+              </article>
 
-            <article class="insight-card">
-              <span class="insight-card__eyebrow"> Timing </span>
+              <article class="insight-card">
+                <span class="insight-card__eyebrow"> Timing </span>
 
-              <h2>When you tend to reflect</h2>
+                <h2>When you tend to reflect</h2>
 
-              <div class="insight-placeholder" id="timePatternChart">
-                Not enough entries yet.
-              </div>
-            </article>
+                <div class="insight-placeholder" id="timePatternChart">
+                  Not enough entries yet.
+                </div>
+              </article>
 
-            <article class="insight-card insight-card--wide">
-              <span class="insight-card__eyebrow"> Reflection dimensions </span>
+              <article class="insight-card insight-card--wide">
+                <span class="insight-card__eyebrow">
+                  Reflection dimensions
+                </span>
 
-              <h2>What you've been noticing</h2>
+                <h2>What you've been noticing</h2>
 
-              <p>
-                This area can later show patterns across whichever reflection
-                dimensions you choose to use.
-              </p>
+                <p>
+                  This area can later show patterns across whichever reflection
+                  dimensions you choose to use.
+                </p>
 
-              <div class="dimension-summary" id="dimensionSummary"></div>
-            </article>
+                <div class="dimension-summary" id="dimensionSummary"></div>
+              </article>
 
-            <article class="insight-card insight-card--reflection">
-              <span class="insight-card__eyebrow"> Remember </span>
+              <article class="insight-card insight-card--reflection">
+                <span class="insight-card__eyebrow"> Remember </span>
 
-              <h2>Patterns aren't labels.</h2>
+                <h2>Patterns aren't labels.</h2>
 
-              <p>
-                Changes in your entries may help you notice something worth
-                reflecting on, but they do not define you or indicate a
-                diagnosis.
-              </p>
-            </article>
+                <p>
+                  Changes in your entries may help you notice something worth
+                  reflecting on, but they do not define you or indicate a
+                  diagnosis.
+                </p>
+              </article>
+            </div>
+          </div>
+
+          <div
+            class="insights-range-content"
+            id="monthlyInsightsContent"
+            data-insights-range="month"
+            hidden
+          >
+            <div class="insights-grid">
+              <article class="insight-card insight-card--large">
+                <div class="insight-card__heading">
+                  <span class="insight-card__eyebrow"> This month </span>
+
+                  <h2>Your month at a glance</h2>
+                </div>
+
+                <div class="weekly-overview-placeholder" id="monthlyOverview">
+                  <span> Monthly visualisation will appear here. </span>
+                </div>
+              </article>
+
+              <article class="insight-card">
+                <span class="insight-card__eyebrow"> Entries </span>
+
+                <h2>Moments recorded</h2>
+
+                <strong class="insight-stat" id="monthlyEntryCount"> 0 </strong>
+
+                <p>moments this month</p>
+              </article>
+
+              <article class="insight-card">
+                <span class="insight-card__eyebrow"> Timing </span>
+
+                <h2>Your reflection rhythm</h2>
+
+                <div class="insight-placeholder" id="monthlyTimePatternChart">
+                  Not enough entries yet.
+                </div>
+              </article>
+
+              <article class="insight-card insight-card--wide">
+                <span class="insight-card__eyebrow">
+                  Reflection dimensions
+                </span>
+
+                <h2>What kept returning</h2>
+
+                <p>
+                  A broader view of the reflection dimensions that appeared
+                  across your month.
+                </p>
+
+                <div
+                  class="dimension-summary"
+                  id="monthlyDimensionSummary"
+                ></div>
+              </article>
+
+              <article
+                class="insight-card insight-card--wide insight-card--monthly-reflection"
+              >
+                <span class="insight-card__eyebrow"> Monthly reflection </span>
+
+                <h2>Looking back at the whole month</h2>
+
+                <div class="insight-placeholder" id="monthlyReflectionSummary">
+                  Your monthly reflection will appear here as more moments are
+                  recorded.
+                </div>
+              </article>
+
+              <article class="insight-card insight-card--reflection">
+                <span class="insight-card__eyebrow"> Remember </span>
+
+                <h2>Patterns aren't labels.</h2>
+
+                <p>
+                  Monthly patterns are there to support reflection. They do not
+                  define you and should not be interpreted as a diagnosis.
+                </p>
+              </article>
+            </div>
           </div>
         </section>
 
@@ -1705,7 +1821,7 @@
               >
                 <input type="checkbox" value="physical-energy" />
 
-                <span class="slider-option__icon" aria-hidden="true"> ⚡ </span>
+                <span class="slider-option__icon" aria-hidden="true"> ↑ </span>
 
                 <span class="slider-option__content">
                   <strong> Physical energy </strong>
@@ -2109,7 +2225,7 @@
               >
                 <input type="checkbox" value="social-energy" />
 
-                <span class="slider-option__icon" aria-hidden="true"> ☺ </span>
+                <span class="slider-option__icon" aria-hidden="true"> ○ </span>
 
                 <span class="slider-option__content">
                   <strong> Social energy </strong>
@@ -2328,7 +2444,7 @@
 
           <section class="slider-category" data-slider-category="rest">
             <header class="slider-category__heading">
-              <span aria-hidden="true"> ☾ </span>
+              <span aria-hidden="true"> ◐ </span>
 
               <div>
                 <h3>Rest &amp; recovery</h3>
@@ -2345,7 +2461,7 @@
               >
                 <input type="checkbox" value="sleepiness" />
 
-                <span class="slider-option__icon" aria-hidden="true"> ☾ </span>
+                <span class="slider-option__icon" aria-hidden="true"> ◐ </span>
 
                 <span class="slider-option__content">
                   <strong> Sleepiness </strong>
@@ -2370,7 +2486,7 @@
               >
                 <input type="checkbox" value="restedness" />
 
-                <span class="slider-option__icon" aria-hidden="true"> ☀ </span>
+                <span class="slider-option__icon" aria-hidden="true"> ◎ </span>
 
                 <span class="slider-option__content">
                   <strong> Restedness </strong>
@@ -2529,6 +2645,104 @@
           Your timeline is a reflection of what you choose to record. It is not
           a diagnosis or mental health assessment.
         </p>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         DETAILED WARNING / DISCLAIMER
+         Reopened from the warning icon after onboarding.
+         No second acknowledgement is required.
+    ====================================================== -->
+
+    <div
+      class="modal warning-modal"
+      id="warningModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="warningModalTitle"
+      hidden
+    >
+      <div class="modal__backdrop" data-close-warning-modal></div>
+
+      <div class="modal__panel warning-modal__panel">
+        <header class="modal__header">
+          <div>
+            <span class="modal__eyebrow"> Important information </span>
+
+            <h2 id="warningModalTitle">About this reflection space</h2>
+          </div>
+
+          <button
+            class="icon-button"
+            id="closeWarningModalButton"
+            type="button"
+            aria-label="Close important information"
+          >
+            ×
+          </button>
+        </header>
+
+        <div class="warning-modal__content">
+          <section class="warning-detail-card">
+            <h3>Designed for reflection</h3>
+
+            <p>
+              Lega is a private space for noticing, recording, and revisiting
+              what you are experiencing. You can begin with sensations,
+              intensity, energy, tension, or other dimensions without needing to
+              name an emotion first.
+            </p>
+          </section>
+
+          <section class="warning-detail-card">
+            <h3>Not a diagnosis or assessment</h3>
+
+            <p>
+              Entries, sliders, colours, icons, timelines, and statistics are
+              reflection tools. They are not medical, psychological, or
+              diagnostic measurements.
+            </p>
+          </section>
+
+          <section class="warning-detail-card">
+            <h3>Not professional care</h3>
+
+            <p>
+              Lega does not provide therapy, medical advice, treatment, or a
+              replacement for professional healthcare or mental health support.
+            </p>
+          </section>
+
+          <section class="warning-detail-card">
+            <h3>Your interpretation comes first</h3>
+
+            <p>
+              Patterns may help you notice something worth reflecting on, but
+              Lega does not decide what you are feeling or what an experience
+              means for you.
+            </p>
+          </section>
+
+          <section class="warning-detail-card">
+            <h3>Why the sliders are descriptive</h3>
+
+            <p>
+              Reflection dimensions such as intensity, heaviness, tension,
+              energy, and overwhelm are deliberately descriptive. They are
+              starting points for reflection rather than clinical scores.
+            </p>
+          </section>
+        </div>
+
+        <div class="modal__actions">
+          <button
+            class="button button--primary"
+            id="warningModalDoneButton"
+            type="button"
+          >
+            Done
+          </button>
+        </div>
       </div>
     </div>
 
@@ -2729,6 +2943,28 @@
                 Stronger visual separation
               </span>
             </button>
+
+            <button
+              class="theme-option"
+              type="button"
+              data-theme="true-black"
+              aria-pressed="false"
+            >
+              <span
+                class="theme-preview theme-preview--true-black"
+                aria-hidden="true"
+              >
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+
+              <span class="theme-option__name"> True Black </span>
+
+              <span class="theme-option__description">
+                Full black with soft contrast
+              </span>
+            </button>
           </div>
         </section>
 
@@ -2785,6 +3021,82 @@
               </span>
 
               <span> Extra Large </span>
+            </button>
+          </div>
+        </section>
+
+        <!-- TYPOGRAPHY -->
+
+        <section
+          class="settings-group"
+          aria-labelledby="typographySettingsTitle"
+        >
+          <div class="settings-group__heading">
+            <h3 id="typographySettingsTitle">Typography</h3>
+
+            <p>
+              Choose the writing style that makes Lega feel most comfortable and
+              approachable to you.
+            </p>
+          </div>
+
+          <div
+            class="typography-options"
+            role="group"
+            aria-label="Choose typography"
+          >
+            <button
+              class="typography-option typography-option--active"
+              type="button"
+              data-typography="clean"
+              aria-pressed="true"
+            >
+              <span
+                class="typography-option__preview typography-option__preview--clean"
+              >
+                Aa
+              </span>
+
+              <span class="typography-option__content">
+                <strong> Clean </strong>
+                <small> Simple and professional </small>
+              </span>
+            </button>
+
+            <button
+              class="typography-option"
+              type="button"
+              data-typography="friendly"
+              aria-pressed="false"
+            >
+              <span
+                class="typography-option__preview typography-option__preview--friendly"
+              >
+                Aa
+              </span>
+
+              <span class="typography-option__content">
+                <strong> Friendly </strong>
+                <small> Softer and more approachable </small>
+              </span>
+            </button>
+
+            <button
+              class="typography-option"
+              type="button"
+              data-typography="scrapbook"
+              aria-pressed="false"
+            >
+              <span
+                class="typography-option__preview typography-option__preview--scrapbook"
+              >
+                Aa
+              </span>
+
+              <span class="typography-option__content">
+                <strong> Scrapbook </strong>
+                <small> Personal and diary-like </small>
+              </span>
             </button>
           </div>
         </section>
